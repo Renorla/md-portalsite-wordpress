@@ -584,3 +584,50 @@ require get_parent_theme_file_path( '/inc/customizer.php' );
  * SVG icons functions and filters.
  */
 require get_parent_theme_file_path( '/inc/icon-functions.php' );
+
+add_filter( 'slack_get_events', function( $events ) {
+	$events['post_news_published'] = array(
+		'action'      => 'transition_post_status',
+		'description' => __( 'When a NEWS post is published', 'slack' ),
+		'default'     => true,
+		'message'     => function( $new_status, $old_status, $post ) {
+			$notified_post_types = apply_filters( 'slack_event_transition_post_status_post_types', array(
+				'post',
+			) );
+
+			if ( ! in_array( $post->post_type, $notified_post_types ) ) {
+				return false;
+			}
+
+			if ( 'publish' !== $old_status && 'publish' === $new_status ) {
+				$excerpt = has_excerpt( $post->ID ) ?
+					apply_filters( 'get_the_excerpt', $post->post_excerpt )
+					:
+					wp_trim_words( strip_shortcodes( $post->post_content ), 10000, '&hellip;' );
+
+				return sprintf(
+					/* translators: 1) URL, 2) post title, and 3) post author. */
+					__( 'New post published: *<%1$s|%2$s>* by *%3$s*', 'slack' ) . "\n" .
+					'> %4$s',
+					get_permalink( $post->ID ),
+					html_entity_decode( get_the_title( $post->ID ), ENT_QUOTES, get_bloginfo( 'charset' ) ),
+					get_the_author_meta( 'display_name', $post->post_author ),
+					html_entity_decode( $excerpt, ENT_QUOTES, get_bloginfo( 'charset' ) )
+				);
+			}
+		}
+	);
+	return $events;
+} );
+
+add_filter( 'slack_get_events', function( $events ) {
+	$events['user_login'] = array(
+			'action'      => 'wp_login',
+			'description' => __( 'When user logged in', 'slack' ),
+			'message'     => function( $user_login ) {
+					return sprintf( '%s is logged in', $user_login );
+			}
+	);
+
+	return $events;
+} );

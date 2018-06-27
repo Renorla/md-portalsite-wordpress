@@ -114,7 +114,7 @@ class WP_Slack_Event_Manager {
 						$excerpt = has_excerpt( $post->ID ) ?
 							apply_filters( 'get_the_excerpt', $post->post_excerpt )
 							:
-							wp_trim_words( strip_shortcodes( $post->post_content ), 55, '&hellip;' );
+							wp_trim_words( strip_shortcodes( $post->post_content ), 5500, '&hellip;' );
 
 						return sprintf(
 							/* translators: 1) URL, 2) post title, and 3) post author. */
@@ -146,7 +146,7 @@ class WP_Slack_Event_Manager {
 						$excerpt = has_excerpt( $post->ID ) ?
 							apply_filters( 'get_the_excerpt', $post->post_excerpt )
 							:
-							wp_trim_words( strip_shortcodes( $post->post_content ), 55, '&hellip;' );
+							wp_trim_words( strip_shortcodes( $post->post_content ), 5500, '&hellip;' );
 
 						return sprintf(
 							/* translators: 1) URL, 2) post title and 3) post author. */
