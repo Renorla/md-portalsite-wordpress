@@ -200,7 +200,6 @@ class WP_Slack_Event_Manager {
 				},
 			),
 
-			/* 業界ニュース通知 */
 			'news_published' => array(
 				'action'      => 'transition_post_status',
 				'description' => __( 'When a news-post is published', 'slack' ),
