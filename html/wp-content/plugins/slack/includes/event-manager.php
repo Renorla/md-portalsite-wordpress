@@ -218,7 +218,6 @@ class WP_Slack_Event_Manager {
 						$excerpt = has_excerpt( $post->ID ) ?
 							apply_filters( 'get_the_excerpt', $post->post_excerpt )
 							:
-							//各行に> を追記してslackで見やすそうにする。
 							strip_tags(implode("> ", explode("\n", $post->post_content)));
 
 						return sprintf(
